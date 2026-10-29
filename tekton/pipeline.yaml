@@ -1,0 +1,22 @@
+# Example Tekton pipeline. Create the referenced Tasks and workspace bindings in your cluster.
+apiVersion: tekton.dev/v1
+kind: Pipeline
+metadata:
+  name: accounts-ci-cd
+spec:
+  workspaces:
+    - name: source
+  tasks:
+    - name: checkout-and-test
+      taskRef:
+        name: accounts-test
+      workspaces:
+        - name: source
+          workspace: source
+    - name: build-image
+      runAfter: [checkout-and-test]
+      taskRef:
+        name: accounts-build
+      workspaces:
+        - name: source
+          workspace: source
